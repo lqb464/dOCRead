@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionLens Hub</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <span class="icon">👁️</span>
+                <h1>Vision<span>Lens</span></h1>
+            </div>
+            <div class="status-indicator">
+                <span class="badge" id="engine-mode-badge">Loading...</span>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="dashboard-grid">
+            <!-- Sidebar: Inputs -->
+            <section class="card input-section">
+                <div class="card-header">
+                    <h2>Image Ingest</h2>
+                </div>
+                
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <div class="upload-icon">📤</div>
+                    <p>Drag & Drop image here or <span>Browse</span></p>
+                    <p class="small">Supports JPG, PNG, WEBP</p>
+                </div>
+
+                <div class="camera-control">
+                    <button class="btn btn-secondary" id="camera-btn">📷 Use Camera</button>
+                    <video id="video-feed" autoplay playsinline style="display: none;"></video>
+                    <canvas id="camera-canvas" style="display: none;"></canvas>
+                    <button class="btn btn-danger" id="snap-btn" style="display: none;">🔴 Capture Frame</button>
+                </div>
+
+                <div class="options-group">
+                    <label for="vision-task">Select Operation</label>
+                    <select id="vision-task">
+                        <option value="ocr">Optical Character Recognition (OCR)</option>
+                        <option value="describe">Image Captioning (Describe)</option>
+                        <option value="detect">Object Detection (Bounding Boxes)</option>
+                    </select>
+                </div>
+
+                <div class="prompt-container" id="prompt-wrapper" style="display: none;">
+                    <label for="prompt-input">Guide Prompt (Optional)</label>
+                    <input type="text" id="prompt-input" placeholder="e.g. Focus on what the people are holding...">
+                </div>
+
+                <button class="btn btn-primary" id="process-btn" disabled>⚡ Analyze Image</button>
+            </section>
+
+            <!-- Workspace: Visualizations -->
+            <section class="card workspace-section">
+                <div class="card-header">
+                    <h2>Visual Workspace</h2>
+                </div>
+                <div class="canvas-container">
+                    <div class="placeholder-text" id="canvas-placeholder">No image loaded yet</div>
+                    <img id="source-image" src="" alt="Source preview" style="display: none;">
+                    <div id="box-overlay" class="overlay-container"></div>
+                </div>
+            </section>
+
+            <!-- Output panel -->
+            <section class="card output-section">
+                <div class="card-header">
+                    <h2>Analysis Output</h2>
+                </div>
+                <div class="output-container">
+                    <pre id="output-block" class="placeholder-output">Analysis results will be displayed here...</pre>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
