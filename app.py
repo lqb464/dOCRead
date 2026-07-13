@@ -1,10 +1,10 @@
-"""Startup script for VisionLens."""
+"""Startup script for dOCRead."""
 import uvicorn
-from src.vision_lens.config import settings
+from src.docread.config import settings
 
 if __name__ == "__main__":
     uvicorn.run(
-        "src.vision_lens.server:app",
+        "src.docread.server:app",
         host=settings.HOST,
         port=settings.PORT,
         reload=True,

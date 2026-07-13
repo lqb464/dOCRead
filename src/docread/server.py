@@ -1,11 +1,12 @@
-"""FastAPI server for VisionLens."""
 import io
 import logging
 from typing import Dict, List, Any, Optional
+from pathlib import Path
 
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 from PIL import Image
 
 from .config import settings
@@ -27,6 +28,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount static files hosting
+STATIC_DIR = Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+@app.get("/")
+def read_root():
+    """Redirect root path to the index.html page."""
+    return RedirectResponse(url="/static/index.html")
 
 # Global engine singleton
 _ENGINE = None

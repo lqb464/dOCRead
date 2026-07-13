@@ -1,7 +1,7 @@
 [project]
-name = "vision_lens"
+name = "docread"
 version = "0.1.0"
-description = "Standalone computer vision microservice supporting Cloud APIs and local open-source models."
+description = "dOCRead: Standalone document reading and computer vision microservice supporting Cloud APIs and local open-source models."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
