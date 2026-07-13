@@ -1,0 +1,36 @@
+# dOCRead stack: API (FastAPI) + UI (Streamlit)
+#
+# Usage:
+#   docker compose up --build -d
+#   Open UI: http://localhost:3000
+#   Open API: http://localhost:8002
+
+services:
+  docread-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: docread-api
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8002
+      OCR_RUNTIME: auto
+      OCR_LANG: en,vi
+      OCR_MAX_SIDE: 1280
+
+  docread-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: docread-ui
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      INTERNAL_API_URL: http://docread-api:8002
+      PORT: 3000
+    depends_on:
+      - docread-api
