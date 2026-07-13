@@ -1,0 +1,24 @@
+[project]
+name = "vision_lens"
+version = "0.1.0"
+description = "Standalone computer vision microservice supporting Cloud APIs and local open-source models."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+    "pydantic-settings",
+    "pillow",
+    "numpy",
+    "openai",
+    "httpx",
+    "easyocr",
+    "transformers",
+    "torch",
+    "torchvision",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
