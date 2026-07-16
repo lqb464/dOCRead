@@ -8,12 +8,12 @@ class BaseVisionEngine(ABC):
     """Abstract interface defining the computer vision capabilities."""
 
     @abstractmethod
-    def ocr(self, image: Image.Image) -> str:
+    def ocr(self, image: Image.Image) -> Dict[str, Any]:
         """
-        Perform Optical Character Recognition on an image.
+        Perform 2-stage Optical Character Recognition (Layout/Box Detection + Recognition).
 
         Returns:
-            Extracted text as a plain string.
+            Dict with 'text' (full plain string) and 'blocks' (list of detected layout box dicts).
         """
         pass
 

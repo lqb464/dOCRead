@@ -6,7 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from PIL import Image
 
 from .config import settings
@@ -37,6 +37,12 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 def read_root():
     """Redirect root path to the index.html page."""
     return RedirectResponse(url="/static/index.html")
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    """Return inline SVG favicon to eliminate 404 browser requests."""
+    svg_content = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📖</text></svg>'
+    return Response(content=svg_content, media_type="image/svg+xml")
 
 # Global engine singleton
 _ENGINE = None
@@ -77,16 +83,24 @@ def health():
 
 @app.post("/api/vision/ocr")
 async def ocr(file: UploadFile = File(...)):
-    """Extract plain text from uploaded image document."""
+    """Extract plain text and layout blocks from uploaded image document."""
     data = await file.read()
     image = load_image_from_bytes(data)
     engine = get_engine()
 
-    logger.info("Executing OCR on file: %s", file.filename)
-    text = engine.ocr(image)
+    logger.info("Executing 2-Stage OCR on file: %s", file.filename)
+    res = engine.ocr(image)
+    if isinstance(res, dict):
+        text = res.get("text", "")
+        blocks = res.get("blocks", [])
+    else:
+        text = str(res)
+        blocks = []
+
     return {
         "filename": file.filename,
         "text": text,
+        "blocks": blocks,
         "engine": settings.VISION_ENGINE_MODE
     }
 

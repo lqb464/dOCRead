@@ -191,11 +191,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (task === "ocr") {
                 outputBlock.textContent = data.text || "[No text found in image]";
+                if (data.blocks && data.blocks.length > 0) {
+                    renderBoundingBoxes(data.blocks, true);
+                }
             } else if (task === "describe") {
                 outputBlock.textContent = data.description;
             } else if (task === "detect") {
                 outputBlock.textContent = JSON.stringify(data.objects, null, 4);
-                renderBoundingBoxes(data.objects);
+                renderBoundingBoxes(data.objects, false);
             }
         } catch (err) {
             outputBlock.classList.remove("placeholder-output");
@@ -206,8 +209,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Bounding Box Renderer
-    function renderBoundingBoxes(objects) {
+    // Bounding Box & OCR Layout Renderer
+    function renderBoundingBoxes(objects, isOcr = false) {
         clearBoxes();
         
         // Wait for image dimensions to align
@@ -218,17 +221,18 @@ document.addEventListener("DOMContentLoaded", () => {
         boxOverlay.style.height = `${imgHeight}px`;
 
         objects.forEach(obj => {
+            if (!obj.box) return;
             const box = obj.box; // [ymin, xmin, ymax, xmax]
             const ymin = box[0] * imgHeight;
             const xmin = box[1] * imgWidth;
             const ymax = box[2] * imgHeight;
             const xmax = box[3] * imgWidth;
             
-            const width = xmax - xmin;
-            const height = ymax - ymin;
+            const width = Math.max(12, xmax - xmin);
+            const height = Math.max(12, ymax - ymin);
 
             const boxEl = document.createElement("div");
-            boxEl.className = "bounding-box";
+            boxEl.className = isOcr ? "bounding-box ocr-box" : "bounding-box";
             boxEl.style.top = `${ymin}px`;
             boxEl.style.left = `${xmin}px`;
             boxEl.style.width = `${width}px`;
@@ -236,7 +240,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const labelEl = document.createElement("span");
             labelEl.className = "box-label";
-            labelEl.textContent = `${obj.label} (${Math.round(obj.confidence * 100)}%)`;
+            if (isOcr) {
+                labelEl.textContent = obj.label || obj.text || "Text Block";
+                boxEl.title = obj.text || "";
+            } else {
+                labelEl.textContent = `${obj.label} (${Math.round((obj.confidence || 0.9) * 100)}%)`;
+            }
             boxEl.appendChild(labelEl);
 
             boxOverlay.appendChild(boxEl);
@@ -246,12 +255,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle window resize to keep bounding boxes aligned
     window.addEventListener("resize", () => {
         if (boxOverlay.children.length > 0 && sourceImage.style.display !== "none") {
+            // Check if current view is ocr or detect based on box classes
+            const isOcrView = boxOverlay.querySelector(".ocr-box") !== null;
             const rawJson = outputBlock.textContent;
             try {
                 const objects = JSON.parse(rawJson);
-                renderBoundingBoxes(objects);
+                renderBoundingBoxes(objects, isOcrView);
             } catch {
-                // ignore if output block is text
+                // ignore if output block is text only
             }
         }
     });

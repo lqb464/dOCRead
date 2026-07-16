@@ -50,7 +50,7 @@ class LocalVisionEngine(BaseVisionEngine):
     CPU-friendly open-source models.
     """
 
-    def ocr(self, image: Image.Image) -> str:
+    def ocr(self, image: Image.Image) -> Dict[str, Any]:
         return run_local_ocr(image)
 
     def describe(self, image: Image.Image, prompt: str = "") -> str:

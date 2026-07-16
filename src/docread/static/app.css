@@ -5,8 +5,8 @@
     --border-color: rgba(255, 255, 255, 0.08);
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
-    --primary: #6366f1;
-    --primary-glow: rgba(99, 102, 241, 0.45);
+    --primary: #3b82f6;
+    --primary-glow: rgba(59, 130, 246, 0.45);
     --accent: #06b6d4;
     --danger: #ef4444;
     --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -34,7 +34,7 @@ body {
     left: 20%;
     width: 60vw;
     height: 60vh;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 100%);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 100%);
     filter: blur(100px);
     z-index: -1;
     pointer-events: none;
@@ -198,6 +198,12 @@ select, input[type="text"] {
     transition: border-color 0.2s;
 }
 
+select option {
+    background-color: #0e1626;
+    color: #f1f5f9;
+    padding: 0.75rem;
+}
+
 select:focus, input[type="text"]:focus {
     border-color: var(--primary);
 }
@@ -221,7 +227,7 @@ select:focus, input[type="text"]:focus {
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #4f46e5;
+    background: #2563eb;
     transform: translateY(-1px);
 }
 
@@ -319,8 +325,30 @@ select:focus, input[type="text"]:focus {
     font-size: 0.75rem;
     font-weight: 700;
     border-radius: 4px 4px 0 0;
-    white-space: nowrap;
     text-transform: uppercase;
+}
+
+.bounding-box.ocr-box {
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
+    background: rgba(59, 130, 246, 0.06);
+}
+
+.bounding-box.ocr-box:hover {
+    border-color: #60a5fa;
+    background: rgba(59, 130, 246, 0.22);
+    z-index: 100;
+}
+
+.bounding-box.ocr-box .box-label {
+    background: #3b82f6;
+    color: white;
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    top: -20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.35);
 }
 
 /* Output Console */
